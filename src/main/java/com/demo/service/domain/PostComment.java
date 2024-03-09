@@ -8,7 +8,6 @@ import java.io.Serializable;
 @Entity
 @Setter
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "post_comment")
@@ -27,13 +26,16 @@ public class PostComment implements Serializable {
 
   private String review;
 
+  public static PostComment fromModel(PostCommentDto postCommentDto) {
+
+    final PostComment comment = new PostComment();
+    comment.setId(postCommentDto.id());
+    comment.setReview(postCommentDto.review());
+    return comment;
+  }
+
   public PostCommentDto toPostCommentDto() {
 
     return new PostCommentDto(id, review);
-  }
-
-  public static PostComment fromModel(PostCommentDto postCommentDto) {
-
-    return PostComment.builder().id(postCommentDto.id()).review(postCommentDto.review()).build();
   }
 }

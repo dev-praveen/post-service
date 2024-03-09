@@ -10,7 +10,6 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "post")
@@ -26,18 +25,23 @@ public class Post implements Serializable {
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<PostComment> comments = new ArrayList<>();
 
+  public static Post fromModel(PostDto postDto) {
+
+    final Post post = new Post();
+    post.setId(postDto.id());
+    post.setTitle(postDto.title());
+    post.setComments(postDto.comments().stream().map(PostComment::fromModel).toList());
+    return post;
+  }
+
+  public void setComments(List<PostComment> comments) {
+    comments.forEach(postComment -> postComment.setPost(this));
+    this.comments = comments;
+  }
+
   public PostDto toPostDto() {
 
     final var postComments = comments.stream().map(PostComment::toPostCommentDto).toList();
     return new PostDto(id, title, postComments);
-  }
-
-  public static Post fromModel(PostDto postDto) {
-
-    return Post.builder()
-        .id(postDto.id())
-        .title(postDto.title())
-        .comments(postDto.comments().stream().map(PostComment::fromModel).toList())
-        .build();
   }
 }

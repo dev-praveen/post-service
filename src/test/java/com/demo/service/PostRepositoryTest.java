@@ -16,22 +16,27 @@ class PostRepositoryTest {
 
   @Autowired private PostRepository postRepository;
 
+  @BeforeAll
+  static void beforeAll() {}
+
   @BeforeEach
   void setUp() {
 
     postRepository.deleteAll();
   }
 
-  @BeforeAll
-  static void beforeAll() {}
-
   @Test
   void shouldSavePostWithComments() {
 
-    final var comment1 = PostComment.builder().review("very good").build();
-    final var comment2 = PostComment.builder().review("nice").build();
-    final var post =
-        Post.builder().title("java jpa blog").comments(List.of(comment1, comment2)).build();
+    final var comment1 = new PostComment();
+    comment1.setReview("very good");
+
+    final var comment2 = new PostComment();
+    comment1.setReview("nice");
+
+    final var post = new Post();
+    post.setTitle("java jpa blog");
+    post.setComments(List.of(comment1, comment2));
 
     final var dbPost = postRepository.save(post);
 
