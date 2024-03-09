@@ -17,10 +17,10 @@ public class PostResource {
   private final PostRepository postRepository;
 
   @PostMapping("/post")
-  public ResponseEntity<Void> createPost(@RequestBody PostDto postDto) {
+  public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
 
-    postRepository.save(Post.fromModel(postDto));
-    return new ResponseEntity<>(HttpStatus.CREATED);
+    final var post = postRepository.save(Post.fromModel(postDto)).toPostDto();
+    return new ResponseEntity<>(post, HttpStatus.CREATED);
   }
 
   @GetMapping("/posts")
